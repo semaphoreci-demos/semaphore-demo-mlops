@@ -7,10 +7,6 @@
 from os.path import join
 from fastai.vision.all import *
 from utils import is_cat
-import yaml
-
-with open("params.yaml", "r") as stream:
-    params = yaml.safe_load(stream)
 
 # Paths
 data_path = join('data', 'images')  # training/validation images
@@ -21,10 +17,10 @@ models_path = 'models'              # where to save trained models
 dls = ImageDataLoaders.from_name_func(
         os.getcwd(), 
         get_image_files(data_path), 
-        valid_pct=params['train']['valid_pct'],           # ratio reserved for validation test (eg. 0.2)
-        seed=params['train']['seed'],                     # random split of training/validation sets
-        label_func=is_cat,                          # the labeling function (True=Cat, False=Dog)
-        item_tfms=Resize(params['train']['resize_img'])  # resize training images to square NxN pixels
+        valid_pct=0.2,          # ratio reserved for validation test
+        seed=42,                # random split of training/validation sets
+        label_func=is_cat,      # the labeling function (True=Cat, False=Dog)
+        item_tfms=Resize(224)   # resize training images to square 224x225 pixels
 )
 
 # Fine-tune model

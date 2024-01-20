@@ -30,7 +30,8 @@ We use [streamlit](https://streamlit.io/) to run a web application on top of the
 
 ## Branches
 
-TBD
+- `main`: final version of the repo with DVC and Semaphore CI/CD initialized.
+- `initial`: this branch only contains the code. Good starting point to learn how to setup MLOps.
 
 ## Prerequisites
 

@@ -1,4 +1,0 @@
-train:
-  valid_pct: 0.3
-  seed: 40
-  resize_img: 224
