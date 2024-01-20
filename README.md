@@ -1,4 +1,6 @@
-# MLOps Demo
+# Computer Vision Demo - DevOps for ML
+
+[![Build Status](https://semaphore-demos.semaphoreci.com/badges/semaphore-demo-mlops/branches/master.svg)](https://semaphore-demos.semaphoreci.com/projects/semaphore-demo-mlops)
 
 This repository contains everything needed to automate training, testing and deployment of an example ML model with DevOps tools and CI/CD.
 
@@ -20,7 +22,7 @@ For fine-tuning, we'll usethe [Oxfort IIIT Pets](https://www.robots.ox.ac.uk/~vg
     - The number indicates the sample item.
 
 `Russian_Blue_111.jpg`
-    - The filename begins with **uppercase**, indicating it's a cat.
+    - The filename begins with **Uppercase**, indicating it's a cat.
     - The words indicate the breed of the cat.
     - The number indicates the sample item.
 
@@ -30,7 +32,8 @@ We use [streamlit](https://streamlit.io/) to run a web application on top of the
 
 ## Branches
 
-TBD
+- `main`: the final state of the demo with CI/CD, DVC and ML pipelines.
+- `initial`: the bare minimum to get started.
 
 ## Prerequisites
 
@@ -51,7 +54,7 @@ It is also recommended to sign up for free accounts on the following websites:
 
 ## Setup
 
-1. Fork and clone this repository
+1. Fork and clone this repository.
 1. Create a virtualenv: `python -m venv .venv`
 1. Activate it: `source .venv/bin/activate`
 1. Install dependencies: `pip install -r requirements.txt`
@@ -60,7 +63,7 @@ It is also recommended to sign up for free accounts on the following websites:
     (alternative link: <https://www.kaggle.com/datasets/tomasfern/oxford-iit-pets>)
 1. Ensure the downloaded tarball is located in `data/images.tar.gz`
 
-## Manual training and deployment
+## Manual finetuning and deployment
 
 To train the model manually:
 
@@ -112,7 +115,7 @@ To setup a DVC ML Pipeline, use [dvc stage add](https://dvc.org/doc/command-refe
 ```bash
 # prepare stage
 $ dvc stage add -n prepare \
-    -d src/prepare.py -d data/images.tar.gz \
+    -d src/prepare.py \
     -o data/images \
     python src/prepare.py
 
