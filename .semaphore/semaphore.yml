@@ -1,0 +1,51 @@
+version: v1.0
+name: "Train and test model \U0001F916"
+agent:
+  machine:
+    type: e1-standard-8
+    os_image: ubuntu2004
+global_job_config:
+  prologue:
+    commands:
+      - sem-version python 3.11
+      - 'wget https://dvc.org/download/linux-deb/dvc-3.36.1 -O dvc.deb'
+      - sudo apt install ./dvc.deb
+      - rm -f dvc.deb
+      - checkout
+      - dvc pull
+      - 'cache restore pip-cache-$SEMAPHORE_WORKFLOW_ID,pip-cache-$SEMAPHORE_GIT_BRANCH,pip-cache'
+      - pip install --cache-dir .pip -r requirements.txt
+      - 'cache store pip-cache-$SEMAPHORE_WORKFLOW_ID,pip-cache-$SEMAPHORE_GIT_BRANCH,pip-cache .pip'
+      - rm -rf .pip
+blocks:
+  - name: "Train model \U0001F916"
+    task:
+      jobs:
+        - name: Pull data and train
+          commands:
+            - dvc repro train
+            - git diff dvc.yaml
+            - artifact push workflow --force metrics
+            - artifact push workflow --force models
+            - dvc push models/*
+      secrets:
+        - name: aws-s3-mlops-tomfern
+    dependencies: []
+  - name: "Test model \U0001F52C"
+    task:
+      jobs:
+        - name: Evaluate
+          commands:
+            - artifact pull workflow --force models
+            - artifact pull workflow --force metrics
+            - dvc freeze train
+            - dvc repro test
+      secrets:
+        - name: aws-s3-mlops-tomfern
+    dependencies:
+      - "Train model \U0001F916"
+promotions:
+  - name: "Deploy \U0001F917"
+    pipeline_file: pipeline_2.yml
+  - name: "Docker \U0001F433"
+    pipeline_file: pipeline_3.yml
