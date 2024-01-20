@@ -1,6 +1,6 @@
 # Computer Vision Demo - DevOps for ML
 
-[![Build Status](https://semaphore-demos.semaphoreci.com/badges/semaphore-demo-mlops/branches/master.svg)](https://semaphore-demos.semaphoreci.com/projects/semaphore-demo-mlops)
+[![Build Status](https://semaphore-demos.semaphoreci.com/badges/semaphore-demo-mlops/branches/main.svg)](https://semaphore-demos.semaphoreci.com/projects/semaphore-demo-mlops)
 
 This repository contains everything needed to automate training, testing and deployment of an example ML model with DevOps tools and CI/CD.
 
