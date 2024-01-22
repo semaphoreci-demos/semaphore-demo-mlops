@@ -26,10 +26,13 @@ dls = ImageDataLoaders.from_name_func(
         label_func=is_cat,                          # the labeling function (True=Cat, False=Dog)
         item_tfms=Resize(params['train']['resize_img'])  # resize training images to square NxN pixels
 )
+print(f"Number of training images: {len(dls.train_ds)}")
+print(f"Number of validation images: {len(dls.valid_ds)}")
+
 
 # Fine-tune model
 learn = vision_learner(dls, resnet34, metrics=error_rate)
-learn.fine_tune(1)
+learn.fine_tune(0)
 
 
 # Plot fine-tuning results
