@@ -1,0 +1,4 @@
+[core]
+    remote = s3-main
+['remote "s3-main"']
+    url = s3://semaphore-mlops/main

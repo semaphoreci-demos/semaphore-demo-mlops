@@ -14,7 +14,7 @@ The base model is [resnet34](https://pytorch.org/vision/main/models/generated/to
 
 ## The Dataset
 
-For fine-tuning, we'll usethe [Oxfort IIIT Pets](https://www.robots.ox.ac.uk/~vgg/data/pets/) dataset. It consists of 7393 labeled images of dogs and cats. The labels are taken from the name of the file. For example:
+For fine-tuning, we'll the [Oxfort IIIT Pets](https://www.robots.ox.ac.uk/~vgg/data/pets/) dataset. It consists of 7393 labeled images of dogs and cats. The labels are taken from the name of the file. For example:
 
 `yorkshire_terrier_85.jpg`
     - The filename begins with **lowercase**, indicating it's a dog.
