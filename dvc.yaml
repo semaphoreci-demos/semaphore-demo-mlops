@@ -5,6 +5,12 @@ stages:
     - src/prepare.py
     outs:
     - data/images
+  test:
+    cmd: python src/test.py
+    deps:
+    - models/model.pkl
+    - models/model.pth
+    - src/test.py
   train:
     cmd: python src/train.py
     deps:
@@ -13,13 +19,9 @@ stages:
     outs:
     - models/model.pkl
     - models/model.pth
+    metrics:
+    - metrics/classification.md
     plots:
     - metrics/confusion_matrix.png
     - metrics/finetune_results.png
     - metrics/top_losses.png
-  test:
-    cmd: python src/test.py
-    deps:
-    - models/model.pkl
-    - models/model.pth
-    - src/test.py

@@ -23,39 +23,43 @@ stages:
       nfiles: 1848
     - path: src/train.py
       hash: md5
-      md5: d3f1977734df9bbbddbd80aeab0d654f
-      size: 2005
+      md5: 3a0e7d5e97153366c44649b25b985174
+      size: 2420
     outs:
+    - path: metrics/classification.md
+      hash: md5
+      md5: c0316d6e947dfc142bd88bd5aad86c77
+      size: 358
     - path: metrics/confusion_matrix.png
       hash: md5
-      md5: 053fcb2557bd7bbd1a1e55445d946e9e
-      size: 14612
+      md5: c2156f347991d1d1f3b11befca93a5c9
+      size: 14350
     - path: metrics/finetune_results.png
       hash: md5
-      md5: 3a0aaf8cea61fe8c0e60f4c20390f223
-      size: 495815
+      md5: 6370d4c8175bc690115cf8e5c61eb6a8
+      size: 473147
     - path: metrics/top_losses.png
       hash: md5
-      md5: 0a70c03e689bdf5f3ead4ee45752cd2a
-      size: 602503
+      md5: 6a36202c0b88adc78f0e05856317142c
+      size: 624660
     - path: models/model.pkl
       hash: md5
-      md5: 677669bd2f901c6a90d2747f5df7be84
-      size: 87475774
+      md5: f87e08f8ff7c8c88f36de5da06f14405
+      size: 87475838
     - path: models/model.pth
       hash: md5
-      md5: 80e376a1e7a1321015f4182339f80d70
+      md5: 83af64c0824ef5ad27239fcf73d05261
       size: 87391130
   test:
     cmd: python src/test.py
     deps:
     - path: models/model.pkl
       hash: md5
-      md5: 677669bd2f901c6a90d2747f5df7be84
-      size: 87475774
+      md5: f87e08f8ff7c8c88f36de5da06f14405
+      size: 87475838
     - path: models/model.pth
       hash: md5
-      md5: 80e376a1e7a1321015f4182339f80d70
+      md5: 83af64c0824ef5ad27239fcf73d05261
       size: 87391130
     - path: src/test.py
       hash: md5

@@ -123,6 +123,7 @@ $ dvc stage add -n prepare \
 $ dvc stage add -n train \
     -d src/train.py -d data/images \
     -o models/model.pkl -o models/model.pth \
+    -m metrics/classification.md \
     --plots metrics/confusion_matrix.png \
     --plots metrics/top_losses.png \
     --plots metrics/finetune_results.png \
