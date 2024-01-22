@@ -12,6 +12,11 @@ blocks:
           commands:
             - checkout
             - artifact pull workflow --force models
-            - './deploy.sh https://huggingface.co/spaces/tomfern/cats-and-dogs $HOME/.ssh/id_ed25519'
+            - ./deploy.sh "$HF_REPO" "$HF_KEY"
       secrets:
         - name: huggingface-tomfern
+      env_vars:
+        - name: HF_REPO
+          value: 'https://huggingface.co/spaces/tomfern/cats-and-dogs'
+        - name: HF_KEY
+          value: /home/semaphore/.ssh/id_ed25519
