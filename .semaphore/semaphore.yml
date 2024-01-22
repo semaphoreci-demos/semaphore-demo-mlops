@@ -27,6 +27,7 @@ blocks:
             - git diff dvc.yaml
             - artifact push workflow --force metrics
             - artifact push workflow --force models
+            - artifact push workflow --force dvc.lock
             - dvc push models/*
       secrets:
         - name: aws-s3-mlops-tomfern
@@ -38,8 +39,9 @@ blocks:
           commands:
             - artifact pull workflow --force models
             - artifact pull workflow --force metrics
-            - dvc freeze train
+            - artifact pull workflow --force dvc.lock
             - dvc repro test
+            - '# python src/gh_comment.py'
       secrets:
         - name: aws-s3-mlops-tomfern
     dependencies:
