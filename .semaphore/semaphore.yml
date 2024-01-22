@@ -41,7 +41,7 @@ blocks:
             - artifact pull workflow --force metrics
             - artifact pull workflow --force dvc.lock
             - dvc repro test
-            - '# python src/gh_comment.py'
+            - python src/gh_comment.py metrics/classification.md
       secrets:
         - name: aws-s3-mlops-tomfern
     dependencies:
