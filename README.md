@@ -14,7 +14,7 @@ The base model is [resnet34](https://pytorch.org/vision/main/models/generated/to
 
 ## The Dataset
 
-For fine-tuning, we'll the [Oxfort IIIT Pets](https://www.robots.ox.ac.uk/~vgg/data/pets/) dataset. It consists of 7393 labeled images of dogs and cats. The labels are taken from the name of the file. For example:
+For fine-tuning, we'll use a subset of the [Oxfort IIIT Pets](https://www.robots.ox.ac.uk/~vgg/data/pets/) dataset. The subset uses about 1800 labeled images of dogs and cats. The labels are taken from the name of the file. For example:
 
 `yorkshire_terrier_85.jpg`
     - The filename begins with **lowercase**, indicating it's a dog.
@@ -33,7 +33,7 @@ We use [streamlit](https://streamlit.io/) to run a web application on top of the
 ## Branches
 
 - `main`: the final state of the demo with CI/CD, DVC and ML pipelines.
-- `initial`: the bare minimum to get started.
+- `initial`: the bare minimum to get started. No pipelines, no dvc installed.
 
 ## Prerequisites
 
@@ -42,8 +42,8 @@ Before starting, you'll need the folliwing tools:
 - [DVC](https://dvc.org)
 - Python 3 and pip
 - Docker Desktop or Docker Engine
-- Git and Git-LFS
-- AWS CLI
+- Git and [Git-LFS](https://git-lfs.com/)
+- [AWS CLI](https://aws.amazon.com/cli/)
 
 It is also recommended to sign up for free accounts on the following websites:
 
@@ -59,8 +59,8 @@ It is also recommended to sign up for free accounts on the following websites:
 1. Activate it: `source .venv/bin/activate`
 1. Install dependencies: `pip install -r requirements.txt`
 1. Initialize the DVC repository: `dvc init`
-1. Download the sample dataset: `dvc get https://thor.robots.ox.ac.uk/~vgg/data/pets/images.tar.gz data/images.tar.gz`
-    (alternative link: <https://www.kaggle.com/datasets/tomasfern/oxford-iit-pets>)
+1. Download the sample dataset: `wget https://huggingface.co/datasets/tomfern/oxford-pets-subset/resolve/main/images.tar.gz -O data/images.tar.gz`
+    (alternative link: <https://www.kaggle.com/datasets/tomasfern/oxford-iiit-pets-subset>)
 1. Ensure the downloaded tarball is located in `data/images.tar.gz`
 
 ## Manual finetuning and deployment
@@ -202,7 +202,7 @@ Example configuration with Semaphore CI/CD:
 1. Create [secrets](https://docs.semaphoreci.com/essentials/using-secrets/) for:
     - AWS: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with S3 bucket access.
     - hub.docker.com: `DOCKER_USERNAME` and `DOCKER_PASSWORD`
-    - huggingface: upload private SSH key to `/home/semaphore/.ssh/` (e.g `id_ed25519`)
+    - huggingface: upload *private* SSH key to folder `/home/semaphore/.ssh/` (e.g `id_ed25519`)
 2. Add your project to Semaphore
 3. Ensure the secrets names are correct and change the paths in the deploy pipeline to match your HuggingFace repository HTTPS URL.
 4. Push changes and see your pipeline flow.

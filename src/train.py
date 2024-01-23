@@ -21,10 +21,10 @@ models_path = 'models'
 dls = ImageDataLoaders.from_name_func(
         os.getcwd(), 
         get_image_files(data_path), 
-        valid_pct=params['train']['valid_pct'],           # ratio reserved for validation test (eg. 0.2)
-        seed=params['train']['seed'],                     # random split of training/validation sets
-        label_func=is_cat,                          # the labeling function (True=Cat, False=Dog)
-        item_tfms=Resize(params['train']['resize_img'])  # resize training images to square NxN pixels
+        valid_pct=params['train']['valid_pct'],           
+        seed=params['train']['seed'],                     
+        label_func=is_cat,                          
+        item_tfms=Resize(params['train']['resize_img'])  
 )
 print(f"Image count for dataset")
 print(f"- Training: {len(dls.train_ds)}")

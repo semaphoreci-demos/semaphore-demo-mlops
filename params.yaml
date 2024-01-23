@@ -1,4 +1,4 @@
 train:
-  valid_pct: 0.3
-  seed: 40
-  resize_img: 224
+  valid_pct: 0.3   # ratio reserved for validation test (eg. 0.2)
+  seed: 40         # random split of training/validation sets
+  resize_img: 224  # resize training images to square NxN pixels
