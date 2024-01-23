@@ -54,7 +54,7 @@ It is also recommended to sign up for free accounts on the following websites:
 
 ## Setup
 
-1. Fork and clone this repository.
+1. Fork and clone this repository (branch=initial): `git clone -b initial https://github.com/<USERNAME>/semaphore-demo-mlops.git`
 1. Create a virtualenv: `python -m venv .venv`
 1. Activate it: `source .venv/bin/activate`
 1. Install dependencies: `pip install -r requirements.txt`
