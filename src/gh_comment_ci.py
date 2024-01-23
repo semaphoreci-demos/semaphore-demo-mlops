@@ -1,12 +1,11 @@
 # Usage:
-# gh_comment_cy.py path/to/report.md
+# $ python gh_comment_ci.py path/to/report.md
 
 import requests
-from requests.auth import HTTPBasicAuth
 import os
 import sys
 
-# Set your credentials and repository details
+
 token = os.getenv('GITHUB_ACCESS_TOKEN')
 repo_slug = os.getenv('SEMAPHORE_GIT_REPO_SLUG')
 commit_sha = os.getenv('SEMAPHORE_GIT_SHA')
@@ -35,7 +34,6 @@ headers = {
 }
 response = requests.post(url, headers=headers, json={'body': comment})
 
-# Check the response
 if response.status_code != 201:
     print('Failed to post comment on GitHub.')
     print('Response:', response.content)

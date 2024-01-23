@@ -13,9 +13,9 @@ with open("params.yaml", "r") as stream:
     params = yaml.safe_load(stream)
 
 # Paths
-data_path = join('data', 'images')  # training/validation images
-metrics_path = 'metrics'            # where to store model metrics and plots
-models_path = 'models'              # where to save trained models
+data_path = join('data', 'images')
+metrics_path = 'metrics'
+models_path = 'models'
 
 # Instantiate dataloader
 dls = ImageDataLoaders.from_name_func(
