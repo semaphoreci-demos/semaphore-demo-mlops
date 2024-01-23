@@ -14,7 +14,7 @@ blocks:
             - artifact pull workflow --force models
             - ./deploy.sh "$HF_REPO" "$HF_KEY"
       secrets:
-        - name: huggingface-tomfern
+        - name: huggingface
       env_vars:
         - name: HF_REPO
           value: 'https://huggingface.co/spaces/tomfern/cats-and-dogs'

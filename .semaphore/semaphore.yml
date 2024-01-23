@@ -30,7 +30,7 @@ blocks:
             - artifact push workflow --force dvc.lock
             - dvc push models/*
       secrets:
-        - name: aws-s3-mlops-tomfern
+        - name: aws-s3-mlops
     dependencies: []
   - name: "Test model \U0001F52C"
     task:
@@ -43,7 +43,7 @@ blocks:
             - dvc repro test
             - python src/gh_comment_ci.py metrics/classification.md
       secrets:
-        - name: aws-s3-mlops-tomfern
+        - name: aws-s3-mlops
     dependencies:
       - "Train model \U0001F916"
 promotions:
