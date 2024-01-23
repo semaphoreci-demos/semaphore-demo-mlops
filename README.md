@@ -95,14 +95,14 @@ Open your browser to <https://localhost:8501> to use the application.
 To deploy the application to HugginFace Spaces:
 
 1. Create a [HuggingFace](https://huggingface.co) account.
-2. Create a SSH keypair and upload the public key to HugginFace.
+2. [Create a SSH keypair](https://docs.digitalocean.com/products/droplets/how-to/add-ssh-keys/create-with-openssh/) and [upload the public key](https://huggingface.co/docs/hub/security-git-ssh) to HugginFace.
 3. Create a Streamlit Space on HuggingFace
 4. Run the deployment script: 
     ```bash
     # eg ./deploy.sh https://huggingface.co/spaces/tomfern/cats-and-dogs /home/semaphore/.ssh/id_ed25519 
     ./deploy <huggingface_https_git_repo> <path_to_priv_key>
     ```
-5. After a few minutes the application should be running in your HuggingFace Space.
+5. After a few minutes the application should be running in your Space.
 
 ## DVC Workflow
 
@@ -199,8 +199,9 @@ To setup a CI/CD pipeline you'll need a few things:
 
 Example configuration with Semaphore CI/CD:
 
+1. [Sign up](https://semaphoreci.com/signup) with GitHub for a *15-day trial* StartUp Semaphore account (the free account won't be enough)
 1. Create [secrets](https://docs.semaphoreci.com/essentials/using-secrets/) for:
-    - AWS: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with S3 bucket access.
+    - AWS: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with S3 bucket access (it's a good idea to [create a programmatic IAM user](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html))
     - hub.docker.com: `DOCKER_USERNAME` and `DOCKER_PASSWORD`
     - huggingface: upload *private* SSH key to folder `/home/semaphore/.ssh/` (e.g `id_ed25519`)
 2. Add your project to Semaphore
