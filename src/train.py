@@ -7,10 +7,6 @@
 from os.path import join
 from fastai.vision.all import *
 from utils import is_cat
-import yaml
-
-with open("params.yaml", "r") as stream:
-    params = yaml.safe_load(stream)
 
 # Paths
 data_path = join('data', 'images')
@@ -21,10 +17,10 @@ models_path = 'models'
 dls = ImageDataLoaders.from_name_func(
         os.getcwd(), 
         get_image_files(data_path), 
-        valid_pct=params['train']['valid_pct'],           
-        seed=params['train']['seed'],                     
+        valid_pct=0.2,           
+        seed=40,                     
         label_func=is_cat,                          
-        item_tfms=Resize(params['train']['resize_img'])  
+        item_tfms=Resize(224)  
 )
 print(f"Image count for dataset")
 print(f"- Training: {len(dls.train_ds)}")
@@ -66,4 +62,3 @@ plt.close()
 interp.plot_top_losses(8, nrows=2)
 plt.savefig(join(metrics_path, 'top_losses.png'))
 plt.close()
-
