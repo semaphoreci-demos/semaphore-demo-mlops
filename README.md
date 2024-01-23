@@ -1,4 +1,6 @@
-# MLOps Demo
+# Computer Vision Demo - DevOps for ML
+
+[![Build Status](https://semaphore-demos.semaphoreci.com/badges/semaphore-demo-mlops/branches/main.svg)](https://semaphore-demos.semaphoreci.com/projects/semaphore-demo-mlops)
 
 This repository contains everything needed to automate training, testing and deployment of an example ML model with DevOps tools and CI/CD.
 
@@ -12,7 +14,7 @@ The base model is [resnet34](https://pytorch.org/vision/main/models/generated/to
 
 ## The Dataset
 
-For fine-tuning, we'll usethe [Oxfort IIIT Pets](https://www.robots.ox.ac.uk/~vgg/data/pets/) dataset. It consists of 7393 labeled images of dogs and cats. The labels are taken from the name of the file. For example:
+For fine-tuning, we'll use a subset of the [Oxfort IIIT Pets](https://www.robots.ox.ac.uk/~vgg/data/pets/) dataset. The subset uses about 1800 labeled images of dogs and cats. The labels are taken from the name of the file. For example:
 
 `yorkshire_terrier_85.jpg`
     - The filename begins with **lowercase**, indicating it's a dog.
@@ -20,7 +22,7 @@ For fine-tuning, we'll usethe [Oxfort IIIT Pets](https://www.robots.ox.ac.uk/~vg
     - The number indicates the sample item.
 
 `Russian_Blue_111.jpg`
-    - The filename begins with **uppercase**, indicating it's a cat.
+    - The filename begins with **Uppercase**, indicating it's a cat.
     - The words indicate the breed of the cat.
     - The number indicates the sample item.
 
@@ -30,8 +32,8 @@ We use [streamlit](https://streamlit.io/) to run a web application on top of the
 
 ## Branches
 
-- `main`: final version of the repo with DVC and Semaphore CI/CD initialized.
-- `initial`: this branch only contains the code. Good starting point to learn how to setup MLOps.
+- `main`: the final state of the demo with CI/CD, DVC and ML pipelines.
+- `initial`: the bare minimum to get started. No pipelines, no dvc installed.
 
 ## Prerequisites
 
@@ -40,8 +42,8 @@ Before starting, you'll need the folliwing tools:
 - [DVC](https://dvc.org)
 - Python 3 and pip
 - Docker Desktop or Docker Engine
-- Git and Git-LFS
-- AWS CLI
+- Git and [Git-LFS](https://git-lfs.com/)
+- [AWS CLI](https://aws.amazon.com/cli/)
 
 It is also recommended to sign up for free accounts on the following websites:
 
@@ -52,16 +54,16 @@ It is also recommended to sign up for free accounts on the following websites:
 
 ## Setup
 
-1. Fork and clone this repository
+1. Fork and clone this repository.
 1. Create a virtualenv: `python -m venv .venv`
 1. Activate it: `source .venv/bin/activate`
 1. Install dependencies: `pip install -r requirements.txt`
 1. Initialize the DVC repository: `dvc init`
-1. Download the sample dataset: `dvc get https://thor.robots.ox.ac.uk/~vgg/data/pets/images.tar.gz data/images.tar.gz`
-    (alternative link: <https://www.kaggle.com/datasets/tomasfern/oxford-iit-pets>)
+1. Download the sample dataset: `wget https://huggingface.co/datasets/tomfern/oxford-pets-subset/resolve/main/images.tar.gz -O data/images.tar.gz`
+    (alternative link: <https://www.kaggle.com/datasets/tomasfern/oxford-iiit-pets-subset>)
 1. Ensure the downloaded tarball is located in `data/images.tar.gz`
 
-## Manual training and deployment
+## Manual finetuning and deployment
 
 To train the model manually:
 
@@ -93,14 +95,14 @@ Open your browser to <https://localhost:8501> to use the application.
 To deploy the application to HugginFace Spaces:
 
 1. Create a [HuggingFace](https://huggingface.co) account.
-2. Create a SSH keypair and upload the public key to HugginFace.
+2. [Create a SSH keypair](https://docs.digitalocean.com/products/droplets/how-to/add-ssh-keys/create-with-openssh/) and [upload the public key](https://huggingface.co/docs/hub/security-git-ssh) to HugginFace.
 3. Create a Streamlit Space on HuggingFace
 4. Run the deployment script: 
     ```bash
     # eg ./deploy.sh https://huggingface.co/spaces/tomfern/cats-and-dogs /home/semaphore/.ssh/id_ed25519 
     ./deploy <huggingface_https_git_repo> <path_to_priv_key>
     ```
-5. After a few minutes the application should be running in your HuggingFace Space.
+5. After a few minutes the application should be running in your Space.
 
 ## DVC Workflow
 
@@ -113,7 +115,7 @@ To setup a DVC ML Pipeline, use [dvc stage add](https://dvc.org/doc/command-refe
 ```bash
 # prepare stage
 $ dvc stage add -n prepare \
-    -d src/prepare.py -d data/images.tar.gz \
+    -d src/prepare.py \
     -o data/images \
     python src/prepare.py
 
@@ -121,6 +123,7 @@ $ dvc stage add -n prepare \
 $ dvc stage add -n train \
     -d src/train.py -d data/images \
     -o models/model.pkl -o models/model.pth \
+    -m metrics/classification.md \
     --plots metrics/confusion_matrix.png \
     --plots metrics/top_losses.png \
     --plots metrics/finetune_results.png \
@@ -196,10 +199,11 @@ To setup a CI/CD pipeline you'll need a few things:
 
 Example configuration with Semaphore CI/CD:
 
+1. [Sign up](https://semaphoreci.com/signup) with GitHub for a *15-day trial* StartUp Semaphore account (the free account won't be enough)
 1. Create [secrets](https://docs.semaphoreci.com/essentials/using-secrets/) for:
-    - AWS: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with S3 bucket access.
+    - AWS: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with S3 bucket access (it's a good idea to [create a programmatic IAM user](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html))
     - hub.docker.com: `DOCKER_USERNAME` and `DOCKER_PASSWORD`
-    - huggingface: upload private SSH key to `/home/semaphore/.ssh/` (e.g `id_ed25519`)
+    - huggingface: upload *private* SSH key to folder `/home/semaphore/.ssh/` (e.g `id_ed25519`)
 2. Add your project to Semaphore
 3. Ensure the secrets names are correct and change the paths in the deploy pipeline to match your HuggingFace repository HTTPS URL.
 4. Push changes and see your pipeline flow.
