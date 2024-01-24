@@ -17,6 +17,6 @@ blocks:
         - name: huggingface
       env_vars:
         - name: HF_REPO
-          value: 'https://huggingface.co/spaces/tomfern/cats-and-dogs'
+          value: 'https://huggingface.co/spaces/<USERNAME>/<REPOSITORY>'
         - name: HF_KEY
-          value: /home/semaphore/.ssh/id_ed25519
+          value: /home/semaphore/.ssh/<PRIV_KEY_FILE>
