@@ -54,7 +54,7 @@ It is also recommended to sign up for free accounts on the following websites:
 
 ## Setup
 
-1. Fork and clone this repository.
+1. Fork and clone this repository (branch=initial): `git clone -b initial https://github.com/<USERNAME>/semaphore-demo-mlops.git`
 1. Create a virtualenv: `python -m venv .venv`
 1. Activate it: `source .venv/bin/activate`
 1. Install dependencies: `pip install -r requirements.txt`
@@ -201,12 +201,15 @@ Example configuration with Semaphore CI/CD:
 
 1. [Sign up](https://semaphoreci.com/signup) with GitHub for a *15-day trial* StartUp Semaphore account (the free account won't be enough)
 1. Create [secrets](https://docs.semaphoreci.com/essentials/using-secrets/) for:
-    - AWS: `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with S3 bucket access (it's a good idea to [create a programmatic IAM user](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html))
-    - hub.docker.com: `DOCKER_USERNAME` and `DOCKER_PASSWORD`
-    - huggingface: upload *private* SSH key to folder `/home/semaphore/.ssh/` (e.g `id_ed25519`)
+    - `aws-s3-mlops`: variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with S3 bucket access (it's a good idea to [create a programmatic IAM user](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html))
+    - `dockerhub`: variables `DOCKER_USERNAME` and `DOCKER_PASSWORD`
+    - `huggingface`: upload *private* SSH key to folder `/home/semaphore/.ssh/` (e.g `id_ed25519`)
+    - `github`: variable `GITHUB_ACCESS_TOKEN` with write permission to public repos.
 2. Add your project to Semaphore
-3. Ensure the secrets names are correct and change the paths in the deploy pipeline to match your HuggingFace repository HTTPS URL.
-4. Push changes and see your pipeline flow.
+3. In the test block of the CI pipeline enable the `github` secret.
+4. Ensure the secrets names are correct
+5. Update the environment varibles in the deploy pipeline. They must point to your priv SSH key and HuggingFace Git repository.
+6. Push changes and see your pipeline flow.
 
 The `main` branch includes an example pipeline to train, test, containerize and deploy your application.
 
