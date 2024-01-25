@@ -33,6 +33,7 @@ We use [streamlit](https://streamlit.io/) to run a web application on top of the
 ## Branches
 
 - `main`: the final state of the demo with CI/CD, DVC and ML pipelines.
+- `noremote`: same as main but without the DVC remote (no AWS S3 bucket required).
 - `initial`: the bare minimum to get started. No pipelines, no dvc installed.
 
 ## Prerequisites
