@@ -12,7 +12,7 @@ global_job_config:
       - sudo apt install ./dvc.deb
       - rm -f dvc.deb
       - checkout
-      - dvc pull
+      - wget https://huggingface.co/datasets/tomfern/oxford-pets-subset/resolve/main/images.tar.gz -O data/images.tar.gz
       - 'cache restore pip-cache-$SEMAPHORE_WORKFLOW_ID,pip-cache-$SEMAPHORE_GIT_BRANCH,pip-cache'
       - pip install --cache-dir .pip -r requirements.txt
       - 'cache store pip-cache-$SEMAPHORE_WORKFLOW_ID,pip-cache-$SEMAPHORE_GIT_BRANCH,pip-cache .pip'
@@ -21,16 +21,13 @@ blocks:
   - name: "Train model \U0001F916"
     task:
       jobs:
-        - name: Pull data and train
+        - name: Download data and train
           commands:
             - dvc repro train
             - git diff dvc.yaml
             - artifact push workflow --force metrics
             - artifact push workflow --force models
             - artifact push workflow --force dvc.lock
-            - dvc push models/*
-      secrets:
-        - name: aws-s3-mlops
     dependencies: []
   - name: "Test model \U0001F52C"
     task:
