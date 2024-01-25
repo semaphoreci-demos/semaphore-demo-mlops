@@ -12,7 +12,6 @@ global_job_config:
       - sudo apt install ./dvc.deb
       - rm -f dvc.deb
       - checkout
-      - wget https://huggingface.co/datasets/tomfern/oxford-pets-subset/resolve/main/images.tar.gz -O data/images.tar.gz
       - 'cache restore pip-cache-$SEMAPHORE_WORKFLOW_ID,pip-cache-$SEMAPHORE_GIT_BRANCH,pip-cache'
       - pip install --cache-dir .pip -r requirements.txt
       - 'cache store pip-cache-$SEMAPHORE_WORKFLOW_ID,pip-cache-$SEMAPHORE_GIT_BRANCH,pip-cache .pip'
@@ -23,6 +22,7 @@ blocks:
       jobs:
         - name: Download data and train
           commands:
+            - 'wget https://huggingface.co/datasets/tomfern/oxford-pets-subset/resolve/main/images.tar.gz -O data/images.tar.gz'
             - dvc repro train
             - git diff dvc.yaml
             - artifact push workflow --force metrics
@@ -37,6 +37,7 @@ blocks:
             - artifact pull workflow --force models
             - artifact pull workflow --force metrics
             - artifact pull workflow --force dvc.lock
+            - dvc freeze train
             - dvc repro test
             - python src/gh_comment_ci.py metrics/classification.md
       secrets:
