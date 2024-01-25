@@ -25,6 +25,7 @@ blocks:
             - 'wget https://huggingface.co/datasets/tomfern/oxford-pets-subset/resolve/main/images.tar.gz -O data/images.tar.gz'
             - dvc repro train
             - git diff dvc.yaml
+            - artifact push workflow --force data
             - artifact push workflow --force metrics
             - artifact push workflow --force models
             - artifact push workflow --force dvc.lock
@@ -34,6 +35,7 @@ blocks:
       jobs:
         - name: Evaluate
           commands:
+            - artifact pull workflow --force data
             - artifact pull workflow --force models
             - artifact pull workflow --force metrics
             - artifact pull workflow --force dvc.lock
