@@ -33,6 +33,7 @@ We use [streamlit](https://streamlit.io/) to run a web application on top of the
 ## Branches
 
 - `main`: the final state of the demo with CI/CD, DVC and ML pipelines.
+- `noremote`: same as main but without the DVC remote (no AWS S3 bucket required).
 - `initial`: the bare minimum to get started. No pipelines, no dvc installed.
 
 ## Prerequisites
@@ -43,14 +44,12 @@ Before starting, you'll need the folliwing tools:
 - Python 3 and pip
 - Docker Desktop or Docker Engine
 - Git and [Git-LFS](https://git-lfs.com/)
-- [AWS CLI](https://aws.amazon.com/cli/)
 
 It is also recommended to sign up for free accounts on the following websites:
 
 - [Kaggle.com](https://kaggle.com)
 - [hub.docker.com](https://hub.docker.com)
 - [HuggingFace.co](https://huggingface.co)
-- [aws.amazon.com](https://aws.amazon.com)
 
 ## Setup
 
@@ -165,35 +164,9 @@ $ dvc repro
 
 This will execute the required steps (ala Makefile) only. After each execution you should commit `dvc.yaml` and `dvc.lock` to preserve the state of the training in Git.
 
-## Using Remote Storage
-
-As of now, only the hashes of the trained model is stored in the GitHub. The actual model files are automatically added to `.gitignore` when the DVC stages are created, so they only exist in your machine. This makes sense because both the data and the model might turn up being too large and unwieldy for a GitHub repository.
-
-To push the to the cloud you need to add remote storage. DVC supports [multiple storage providers](https://dvc.org/doc/user-guide/data-management/remote-storage) including Google Cloud and AWS S3 Buckets. 
-
-In the following example, we use an S3 Bucket for remote storage:
-
-1. Go to your AWS Console and create an S3 Bucket (eg. `mybucket-dvc`)
-2. Check you have access to the buckets from your machine: `aws s3 ls`
-3. Add the AWS remote to DVC: `dvc remote add mybucket-dvc s3://mybucket/main`
-4. Set the bucket as default: `dvc remote default mybucket-dvc`
-5. Push the files to the bucket: `dvc push`
-
-Now each time you make change you should both commit the changes to GitHub and then do a `dvc push`. You can get the latest files from the remote storage with `dvc pull`
-
-## Use the ML pipeline in another machine
-
-You can reproduce the training in another machine by leveraging Git and the remote storage. Once you configure the AWS CLI to access your S3 bucket you can:
-
-1. Pull from dvc remote repo: `dvc pull`
-2. Run workflow: `dvc repro`
-3. Push data and artifacts to remote repo: `dvc push`
-4. Commit changes: `git add -A && git commit`
-
 ## CI/CD
 
 To setup a CI/CD pipeline you'll need a few things:
-- A token with access to the remote storage. For example, an IAM account with restricted access to the S3 bucket (read/write).
 - For containers, a token to access the Docker registry. For example, the user/password for a hub.docker.com account.
 - For running the app in HuggingFace Spaces, you'll need to upload your SSH pubkey and install GIT LFS.
 
@@ -201,7 +174,6 @@ Example configuration with Semaphore CI/CD:
 
 1. [Sign up](https://semaphoreci.com/signup) with GitHub for a *15-day trial* StartUp Semaphore account (the free account won't be enough)
 1. Create [secrets](https://docs.semaphoreci.com/essentials/using-secrets/) for:
-    - `aws-s3-mlops`: variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` with S3 bucket access (it's a good idea to [create a programmatic IAM user](https://docs.aws.amazon.com/AmazonS3/latest/userguide/create-bucket-overview.html))
     - `dockerhub`: variables `DOCKER_USERNAME` and `DOCKER_PASSWORD`
     - `huggingface`: upload *private* SSH key to folder `/home/semaphore/.ssh/` (e.g `id_ed25519`)
     - `github`: variable `GITHUB_ACCESS_TOKEN` with write permission to public repos.
