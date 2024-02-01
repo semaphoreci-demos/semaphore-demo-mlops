@@ -1,6 +1,6 @@
 # Computer Vision Demo - DevOps for ML
 
-[![Build Status](https://semaphore-demos.semaphoreci.com/badges/semaphore-demo-mlops/branches/main.svg)](https://semaphore-demos.semaphoreci.com/projects/semaphore-demo-mlops)
+[![Build Status](https://semaphore-demos.semaphoreci.com/badges/semaphore-demo-mlops/branches/noremote.svg)](https://semaphore-demos.semaphoreci.com/projects/semaphore-demo-mlops)
 
 This repository contains everything needed to automate training, testing and deployment of an example ML model with DevOps tools and CI/CD.
 
@@ -215,6 +215,77 @@ Example configuration with Semaphore CI/CD:
 The `main` branch includes an example pipeline to train, test, containerize and deploy your application.
 
 ![](./.semaphore/semaphore.jpg)
+
+### Continuous Integration Pipeline
+
+You'll need a [CI machine] with more than 8GM of memory. Machine `e1-standard-8` works well.
+
+In the CI pipeline prologue use the following commands:
+
+```bash
+sem-version python 3.11
+'wget https://dvc.org/download/linux-deb/dvc-3.36.1 -O dvc.deb'
+sudo apt install ./dvc.deb
+rm -f dvc.deb
+checkout
+dvc pull
+'cache restore pip-cache-$SEMAPHORE_WORKFLOW_ID,pip-cache-$SEMAPHORE_GIT_BRANCH,pip-cache'
+pip install --cache-dir .pip -r requirements.txt
+'cache store pip-cache-$SEMAPHORE_WORKFLOW_ID,pip-cache-$SEMAPHORE_GIT_BRANCH,pip-cache .pip'
+rm -rf .pip
+```
+
+The train block runs these commands (enable the S3 bucket secret):
+
+```bash
+dvc repro train
+git diff dvc.yaml
+artifact push workflow --force metrics
+artifact push workflow --force models
+artifact push workflow --force dvc.lock
+dvc push models/*
+```
+
+The test block uses these commands (enable the S3 bucket secret):
+
+```bash
+artifact pull workflow --force models
+artifact pull workflow --force metrics
+artifact pull workflow --force dvc.lock
+dvc repro test
+python src/gh_comment_ci.py metrics/classification.md
+```
+
+### Continuous Delivery Pipeline
+
+This pipeline builds a Docker image. First, enable the dockerhub secret in the block, then paste these commands:
+
+```bash
+'echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin'
+checkout
+artifact pull workflow --force models
+'docker pull $DOCKER_USERNAME/cats-and-dogs-classifier:$SEMAPHORE_GIT_SHA || true'
+'docker build -t $DOCKER_USERNAME/cats-and-dogs-classifier:$SEMAPHORE_GIT_SHA .'
+'docker push $DOCKER_USERNAME/cats-and-dogs-classifier:$SEMAPHORE_GIT_SHA'
+```
+
+### Continuous Deployment Pipeline
+
+This pipeline deploys the application to HuggingFace Spaces.
+
+First, enable the SSH key secret in the block. 
+
+Next, set the environment variables:
+    - `HF_REPO`: HTTP path to your Git repo on HuggingFace
+    - `HF_KEY`: path to your private SSH key on the CI machine (eg. "/home/semaphore/.ssh/id_ed25519")
+
+Finally, paste this commands in the block:
+
+```bash
+checkout
+artifact pull workflow --force models
+./deploy.sh "$HF_REPO" "$HF_KEY"
+```
 
 ## License
 
