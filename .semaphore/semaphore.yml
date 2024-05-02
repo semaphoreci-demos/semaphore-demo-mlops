@@ -7,7 +7,7 @@ agent:
 global_job_config:
   prologue:
     commands:
-      - sem-version python 3.11
+      - sem-version python 3.12
       - 'wget https://dvc.org/download/linux-deb/dvc-3.36.1 -O dvc.deb'
       - sudo apt install ./dvc.deb
       - rm -f dvc.deb
