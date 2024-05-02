@@ -62,6 +62,17 @@ It is also recommended to sign up for free accounts on the following websites:
     (alternative link: <https://www.kaggle.com/datasets/tomasfern/oxford-iiit-pets-subset>)
 1. Ensure the downloaded tarball is located in `data/images.tar.gz`
 
+If you want to update the `requirements.txt` for a different Python version:
+
+```shell
+deactivate
+rm -rf .venv
+python -m venv .venv
+source .venv/bin/activate
+pip install streamlit numpy fastai
+pip freeze > requirements.txt
+```
+
 ## Manual finetuning and deployment
 
 To train the model manually:
