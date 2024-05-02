@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM python:3.12-slim
 WORKDIR /usr/src/app
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
